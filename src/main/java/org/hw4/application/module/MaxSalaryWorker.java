@@ -13,7 +13,6 @@ public class MaxSalaryWorker {
     private LocalDate birthday;
     private String level;
     private int salary;
-    private String type;
 
     @Override
     public String toString() {
@@ -22,7 +21,6 @@ public class MaxSalaryWorker {
                 "\n\tname = " + name +
                 "\n\tbirthday = " + birthday +
                 "\n\tlevel = " + level +
-                "\n\tsalary = " + salary +
-                "\n\ttype = " + type;
+                "\n\tsalary = " + salary;
     }
 }
