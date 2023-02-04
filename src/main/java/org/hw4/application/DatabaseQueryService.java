@@ -11,21 +11,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hw4.application.GetQueries.getQueries;
+import static org.hw4.application.storage.DataSource.*;
 
 public class DatabaseQueryService {
 
     public static void main(String[] args) {
-        findMaxSalaryWorker().forEach(System.out::println);
-        findMaxProjectClient().forEach(System.out::println);
-        findLongestProject().forEach(System.out::println);
-        findYoungestEldestWorker().forEach(System.out::println);
-        printProjectPrices().forEach(System.out::println);
+        try {
+            findMaxSalaryWorker().forEach(System.out::println);
+            findMaxProjectClient().forEach(System.out::println);
+            findLongestProject().forEach(System.out::println);
+            findYoungestEldestWorker().forEach(System.out::println);
+            printProjectPrices().forEach(System.out::println);
+        } catch (RuntimeException e){
+            throw e;
+        } finally {
+            closeConnection();
+        }
     }
 
     public static List<MaxSalaryWorker> findMaxSalaryWorker(){
         List<MaxSalaryWorker> maxSalaryWorkers = new ArrayList<>();
 
-        try (Statement statement = DataSource.getConnection().createStatement()) {
+        try (Statement statement = getConnection().createStatement()) {
             for (String query : getQueries("src/sql/find_max_salary_worker.sql")) {
                 try(ResultSet resultSet = statement.executeQuery(query)) {
                     while (resultSet.next())
@@ -50,7 +57,7 @@ public class DatabaseQueryService {
     public static List<MaxProjectClient> findMaxProjectClient(){
         List<MaxProjectClient> maxProjectClients = new ArrayList<>();
 
-        try (Statement statement = DataSource.getConnection().createStatement()) {
+        try (Statement statement = getConnection().createStatement()) {
             for (String query : getQueries("src/sql/find_max_projects_client.sql")) {
                 try(ResultSet resultSet = statement.executeQuery(query)) {
                     while (resultSet.next())
@@ -73,7 +80,7 @@ public class DatabaseQueryService {
     public static List<LongestProject> findLongestProject(){
         List<LongestProject> longestProjects = new ArrayList<>();
 
-        try (Statement statement = DataSource.getConnection().createStatement()) {
+        try (Statement statement = getConnection().createStatement()) {
             for (String query : getQueries("src/sql/find_longest_project.sql")) {
                 try(ResultSet resultSet = statement.executeQuery(query)) {
                     while (resultSet.next())
@@ -96,7 +103,7 @@ public class DatabaseQueryService {
     public static List<YoungestEldestWorker> findYoungestEldestWorker(){
         List<YoungestEldestWorker> youngestEldestWorkers = new ArrayList<>();
 
-        try (Statement statement = DataSource.getConnection().createStatement()) {
+        try (Statement statement = getConnection().createStatement()) {
             for (String query : getQueries("src/sql/find_youngest_eldest_workers.sql")) {
                 try(ResultSet resultSet = statement.executeQuery(query)) {
                     while (resultSet.next())
@@ -122,7 +129,7 @@ public class DatabaseQueryService {
     public static List<ProjectPrices> printProjectPrices(){
         List<ProjectPrices> projectPrices = new ArrayList<>();
 
-        try (Statement statement = DataSource.getConnection().createStatement()) {
+        try (Statement statement = getConnection().createStatement()) {
             for (String query : getQueries("src/sql/print_project_prices.sql")) {
                 try(ResultSet resultSet = statement.executeQuery(query)) {
                     while (resultSet.next())
