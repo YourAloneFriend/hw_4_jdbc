@@ -11,9 +11,10 @@ import java.util.Properties;
 
 public class DataSource {
 
-    private final static Connection connection;
+    private Connection connection;
+    private static DataSource dataSource;
 
-    static {
+    private DataSource(){
         try(InputStream fis = DataSource.class.getClassLoader().getResourceAsStream("application.properties")) {
             if(fis == null)
                 throw new IOException("Can't find this file.");
@@ -31,16 +32,17 @@ public class DataSource {
         }
     }
 
-    public static Connection getConnection(){
-        return connection;
-    }
-
-    public static void closeConnection(){
+    public static DataSource getInstance(){
         try {
-            connection.close();
-            System.out.println("Connection is closed.");
+            if (dataSource == null || dataSource.getConnection().isClosed())
+                dataSource = new DataSource();
+            return dataSource;
         } catch (SQLException e){
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public Connection getConnection(){
+        return connection;
     }
 }
